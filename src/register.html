@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register</title>
+    <style>
+        .table-responsive {
+          max-height: 500px;
+          overflow-y: auto;
+        }
+        th, td {
+          white-space: nowrap;
+        }
+      </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-DQvkBjpPgn7RC31MCQoOeC9TI2kdqa4+BSgNMNj8v77fdC77Kj5zpWFTJaaAoMbC" crossorigin="anonymous">
+  </head>
+  <body class="p-4">
+    <a href="index.html"><button type="button" class="btn btn-success my-3"><i class="bi bi-arrow-left-circle"></i> Back</button></a>
+    <div id="alert"></div>
+    
+    <div id="detail" class="container-md table">
+        <h2 class="mb-3">Participant Detail</h2>
+        <table class="table table-bordered">
+            <tbody id="content-table">
+            </tbody>
+        </table>
+        <button id="register_button" type="button" class=""></button>
+        <button id="sertif_download" type="button" class="btn btn-info">Download Sertifikat</button>
+    </div>
+    
+
+    
+    <!-- PENTING -->
+    <script src="../register.js" type="module"> </script>
+    <script src="../https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- PENTING -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/js/bootstrap.bundle.min.js" integrity="sha384-YUe2LzesAfftltw+PEaao2tjU/QATaW/rOitAq67e0CT0Zi2VVRL0oC4+gAaeBKu" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  </body>
+</html>

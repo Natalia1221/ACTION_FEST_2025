@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "http-server src -p 8080"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "dotenv": "^16.4.7",
+    "netlify-cli": "^19.1.5"
+  }
+}
