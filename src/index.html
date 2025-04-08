@@ -24,21 +24,28 @@
       document.getElementById("submit-button").addEventListener("click", async function(){
         register_code = document.getElementById("codeInput").value.toUpperCase()
         
-        if(register_code.slice(0,3)== "MAT" || register_code.slice(0,3)== "DAN"){
+        if(register_code.slice(0,2)== "MT" || register_code.slice(0,2)== "DC"){
             table = "dance_math";
-        }else if(register_code.slice(0,3)== "ENG" || register_code.slice(0,3)== "POS"){
+        }else if(register_code.slice(0,2)== "ES" || register_code.slice(0,2)== "DP"){
             table = "eng_post";
-        }else if(register_code.slice(0,3)!=""){
+        }else if(register_code.slice(0,2)!=""){
             alert("Code Tidak Valid.");
         }
 
-        fetch( `/.netlify/functions/database?table=${table}`)
+        fetch( `/.netlify/functions/database?table=${table}&code=${register_code}`)
           .then(res => res.json())
-          
+          .then(data => {
+              if(data.id.toUpperCase() == register_code.toUpperCase()){
+                localStorage.setItem("participantData", JSON.stringify(data));
+                localStorage.setItem("table", table);
+                window.location.href = "register.html";
+              }else{
+                alert("Data tidak ditemukan.");
+              }
+          })
+
       })
     </script>
-    <script src="../main.js" type="module"></script>
-    <script src="../database.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- PENTING -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/js/bootstrap.bundle.min.js" integrity="sha384-YUe2LzesAfftltw+PEaao2tjU/QATaW/rOitAq67e0CT0Zi2VVRL0oC4+gAaeBKu" crossorigin="anonymous"></script>

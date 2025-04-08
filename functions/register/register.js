@@ -1,4 +1,5 @@
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
+// Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 const { createClient } = require('@supabase/supabase-js/');
 require('dotenv').config();
 
@@ -13,14 +14,12 @@ const handler = async (event) => {
   try{
     const {data} = await supabase
     .from(table)
-    .select("*");
-
-    // get participant data
-    const result = data.find(participant => participant.id.toUpperCase() === code.toUpperCase());
+    .update({regist_status:true})
+    .eq("id", code)
 
     return{
       statusCode: 200,
-      body:JSON.stringify(result)
+      body:JSON.stringify(data)
     }
   }catch(error){
     const{status, statusText, header, data} = error.response

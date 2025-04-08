@@ -1,5 +1,5 @@
-import {updateDanceMathToDB, updateEngPostToDB} from './database.js'
-        const participantData = JSON.parse(localStorage.getItem("participantData"));
+const participantData = JSON.parse(localStorage.getItem("participantData"));
+const table = localStorage.getItem("table");
 
 if (participantData) {
     let table = document.getElementById("content-table")
@@ -16,7 +16,7 @@ if (participantData) {
                 </tr>
     `
 
-    if(id.slice(0,3)=="DAN" || id.slice(0,3)=="MAT"){
+    if(id.slice(0,2)=="DC" || id.slice(0,2)=="MT"){
         content += `
                     <tr>
                         <th scope="row">Group Name</th>
@@ -64,23 +64,20 @@ if(participantData.regist_status==true){
 }
 
 document.getElementById("register_button").addEventListener("click", function(){
-    if(participantData.id.slice(0, 3) == "MAT" || participantData.id.slice(0, 3) == "DAN"){
-        updateDanceMathToDB(participantData.id, true)
-    }else{
-        updateEngPostToDB(participantData.id, true)
-    }
-    
-    document.getElementById("detail").innerHTML = `
-    <div class="card text-center">
-        <div class="card-body">
-            
-            <h5 class="card-title">${participantData.id.slice(0, 3) == "MAT" || participantData.id.slice(0, 3) == "DAN"
-                ? participantData.group_name
-                : participantData.full_name} Sudah Teregistrasi</h5>
-            <p class="card-text">Silahkan Nikmati Festivalnya</p>
-        </div>
-    </div>
-    `
+    fetch( `/.netlify/functions/register?table=${table}&code=${participantData.id}`)
+          .then(() => {
+            document.getElementById("detail").innerHTML = `
+                <div class="card text-center">
+                    <div class="card-body">
+                        
+                        <h5 class="card-title">${participantData.id.slice(0, 2) == "MT" || participantData.id.slice(0, 2) == "DC"
+                            ? participantData.group_name
+                            : participantData.full_name} Sudah Teregistrasi</h5>
+                        <p class="card-text">Silahkan Nikmati Festivalnya</p>
+                    </div>
+                </div>
+                `
+          })
 })
 
 function extractFileId(driveUrl) {
