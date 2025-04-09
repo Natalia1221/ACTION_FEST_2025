@@ -1,0 +1,62 @@
+:root {
+    --color-primary-500: #004c4c;
+    --color-primary-600: #004c4c;
+    --color-primary-700: #00645f;
+    --color-primary-800: #00645f;
+}
+
+/* Basic Modal Styling */
+.modal-overlay { transition: opacity 0.3s ease-in-out; }
+.modal-content { transition: transform 0.3s ease-in-out; }
+body.modal-open { overflow: hidden; }
+
+/* Confirmation Modal Styles */
+.confirmation-label { font-weight: 600; color: #4b5563; }
+.confirmation-value { color: #1f2937; margin-left: 0.5rem; }
+
+/* == Custom Utility Classes using Variables == */
+.btn-primary { background-color: var(--color-primary-600); color: white; }
+.btn-primary:hover { background-color: var(--color-primary-700); }
+.btn-primary:focus {
+    outline: 2px solid transparent; outline-offset: 2px;
+    --tw-ring-offset-shadow: var(--tw-ring-offset-width, 0px) 0 0 0 var(--tw-ring-offset-color, #fff);
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, var(--color-primary-500));
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+.link-primary { color: var(--color-primary-600); }
+.link-primary:hover { color: var(--color-primary-500); }
+.text-primary-700 { color: var(--color-primary-700); }
+
+/* Input focus styles */
+.focus\:border-\[var\(--color-primary-500\)\]:focus { border-color: var(--color-primary-500); }
+.focus\:ring-primary-500:focus {
+     --tw-ring-opacity: 1; --tw-ring-color: var(--color-primary-500);
+     --tw-ring-offset-shadow: var(--tw-ring-offset-width, 0px) 0 0 0 var(--tw-ring-offset-color, #fff);
+     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color); /* 1px ring */
+     box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+/* Input error styles */
+.input-error { border-color: #f59222; } /* red-600 */
+.input-error:focus { --tw-ring-color: #f59222; border-color: #f59222; }
+.error-message { color: #f59222; font-size: 0.75rem; margin-top: 0.25rem; }
+
+
+/* Background Image Styles */
+body {
+    background-image: url('Assets/Gunung PNG-01.png');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    background-color: #f3f4f6; /* Fallback color */
+}
+
+ /* Info Button Styles needed if Info Modal is kept */
+ .option-info-button {
+     color: var(--color-primary-600); margin-left: auto; padding: 0.25rem;
+     border-radius: 9999px; flex-shrink: 0;
+ }
+ .option-info-button:hover { background-color: #e5e7eb; color: var(--color-primary-800); }
+ .option-info-button:focus {
+      outline: 2px solid transparent; outline-offset: 2px;
+      --tw-ring-color: var(--color-primary-500); box-shadow: 0 0 0 2px var(--tw-ring-color);
+ }
