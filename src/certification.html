@@ -26,13 +26,13 @@
 
         [role="option"][aria-selected="true"] { background-color: #f3f4f6; }
         .option-info-button {
-             color: var(--color-primary-600); margin-left: auto; padding: 0.25rem;
-             border-radius: 9999px; flex-shrink: 0;
+            color: var(--color-primary-600); margin-left: auto; padding: 0.25rem;
+            border-radius: 9999px; flex-shrink: 0;
         }
         .option-info-button:hover { background-color: #e5e7eb; color: var(--color-primary-800); }
         .option-info-button:focus {
-             outline: 2px solid transparent; outline-offset: 2px;
-             --tw-ring-color: var(--color-primary-500); box-shadow: 0 0 0 2px var(--tw-ring-color);
+            outline: 2px solid transparent; outline-offset: 2px;
+            --tw-ring-color: var(--color-primary-500); box-shadow: 0 0 0 2px var(--tw-ring-color);
         }
         .input-error { border-color: #f59120; }
         .input-error:focus { --tw-ring-color: #f59120; border-color: #f59120; }
@@ -51,10 +51,10 @@
 
         .focus\:border-\[var\(--color-primary-500\)\]:focus { border-color: var(--color-primary-500); }
         .focus\:ring-primary-500:focus {
-             --tw-ring-opacity: 1; --tw-ring-color: var(--color-primary-500);
-             --tw-ring-offset-shadow: var(--tw-ring-offset-width, 0px) 0 0 0 var(--tw-ring-offset-color, #fff);
-             --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color);
-             box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+            --tw-ring-opacity: 1; --tw-ring-color: var(--color-primary-500);
+            --tw-ring-offset-shadow: var(--tw-ring-offset-width, 0px) 0 0 0 var(--tw-ring-offset-color, #fff);
+            --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color);
+            box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
         }
         .input-error { border-color: #f59120; }
         .input-error:focus { --tw-ring-color: #f59120; border-color: #f59120; }
@@ -74,52 +74,114 @@
 <body class="font-sans antialiased">
 
     <div class="w-full fixed top-0 left-0 right-0 z-50 flex lg:justify-end p-2 md:p-4 lg:p-4 drop-shadow-lg">
-        <a href="Home.html" class="flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium btn-primary transition duration-150 ease-in-out">
+        <a href="index.html" class="flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium btn-primary transition duration-150 ease-in-out">
             <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                 <path fill-rule="evenodd" d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z" clip-rule="evenodd"/>
             </svg>
         </a>
     </div>
 
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24 relative z-10">
-            <div class="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-xl">
-                
-                <div class="mb-8 flex flex-col items-center text-center">
-                    <img class="h-auto max-w-[150px] sm:max-w-[200px] my-4" src="Assets/Action Fest 3 PNG-01.png" alt="Action Fest Logo">
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mt-4">Certification</h1>
-                </div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24 relative z-10">
+        <div class="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-xl">
 
-                <div>
-                    <label for="registration-code" class="block text-sm font-medium text-gray-700 mb-1">Input Your Name</label>
-                    <input type="text" name="registration-code" id="registration-code" required placeholder="Enter your code"
-                           class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus\:ring-primary-500 focus\:border-\[var\(--color-primary-500\)\] sm:text-sm">
-                    <p class="error-message hidden" id="registration-code-error">Please enter your name.</p>
-                </div>
+            <div class="mb-8 flex flex-col items-center text-center">
+                <img class="h-auto max-w-[150px] sm:max-w-[200px] my-4" src="Assets/Action Fest 3 PNG-01.png" alt="Action Fest Logo">
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mt-4">Certification</h1>
+            </div>
 
-                <div class="my-6">
-                    <iframe
-                        class="w-full aspect-video rounded border border-gray-300"
-                        src="https://drive.google.com/file/d/1H89Nar3Rn8DoKgmLl9B1OVOLRM0mWFyC/preview"
-                        allow="autoplay"
-                        allowfullscreen>
-                    </iframe>
-                </div>
+            <div>
+                <label for="registration-code" class="block text-sm font-medium text-gray-700 mb-1">Input Your Name</label>
+                <input type="text" name="registration-code" id="registration-code" required placeholder="Enter your name"
+                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus\:ring-primary-500 focus\:border-\[var\(--color-primary-500\)\] sm:text-sm">
+                <p class="error-message hidden" id="registration-code-error">Please enter your name.</p>
+            </div>
 
-                <div class="mt-8 text-center">
-                    <a href="https://drive.google.com/uc?export=download&id=1H89Nar3Rn8DoKgmLl9B1OVOLRM0mWFyC"
-                       download="ActionFest_CertificationInfo"
-                       target="_blank"
-                       rel="noopener noreferrer" 
-                       class="inline-flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium btn-primary transition duration-150 ease-in-out">
-                        <svg class="w-5 h-5 mr-2 -ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
-                           <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                        </svg>
-                        Download Certification Info
-                    </a>
-                </div>
+            <div class="my-6" id="certificate-display">
 
             </div>
-        </div>
 
+            <div class="mt-8 text-center">
+                <button id="show-certificate" class="inline-flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium btn-primary transition duration-150 ease-in-out">
+                    Show Certificate
+                </button>
+                <a href="https://drive.google.com/uc?export=download&id=1H89Nar3Rn8DoKgmLl9B1OVOLRM0mWFyC"
+                    download="ActionFest_CertificationInfo"
+                    target="_blank"
+                    rel="noopener noreferrer" 
+                    id="link_download"
+                    class="inline-flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium btn-primary transition duration-150 ease-in-out mt-4">
+                    <svg class="w-5 h-5 mr-2 -ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Download Certification Info
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function extractFileId(driveUrl) {
+            const match = driveUrl.match(/\/file\/d\/([^\/]+)/);
+            return match ? match[1] : null;
+        }
+
+        document.getElementById('show-certificate').addEventListener('click', async function() {
+            const name = document.getElementById('registration-code').value;
+            const certificateDisplay = document.getElementById('certificate-display');
+            const errorMessage = document.getElementById('registration-code-error');
+
+            if (name.trim() === '') {
+                certificateDisplay.innerHTML = '';
+                errorMessage.classList.remove('hidden');
+                errorMessage.textContent = 'Please enter your name.';
+                return;
+            }
+
+            try {
+                const response = await fetch('/.netlify/functions/sertif', { // Replace with your function name
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: name }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data && data.link) {
+                    certificateDisplay.innerHTML = `<iframe
+                        class="w-full aspect-video rounded border border-gray-300"
+                        src="${data.link}/preview"
+                        allow="autoplay"
+                        allowfullscreen>
+                    </iframe>`;
+                    errorMessage.classList.add('hidden');
+
+                    const fileId = extractFileId(data.link);
+                    console.log(fileId)
+                    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+                    let myLink = document.getElementById('link_download'); // Assuming you have an anchor with id="myLink"
+
+                    if (myLink) { // Check if the element exists
+                        myLink.setAttribute('href', downloadUrl);
+                    }
+                } else {
+                    certificateDisplay.innerHTML = '<p class="text-center text-red-500">Certificate not found.</p>';
+                    errorMessage.classList.add('hidden');
+                }
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                certificateDisplay.innerHTML = '<p class="text-center text-red-500">An error occurred.</p>';
+                errorMessage.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
