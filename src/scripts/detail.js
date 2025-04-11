@@ -262,34 +262,46 @@ function getRegistStatus(){
     
 }
 
+//UPDATE DETAIL
+// ... (Your existing code)
+
+async function setupRealtimeSubscription(participantData) {
+    const table = localStorage.getItem("table");
+    const supabase = createClient(process.env.APIURL_SECRET, process.env.APIKEY_SECRET);
+
+    supabase
+        .channel('table-changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: table }, payload => {
+            console.log('Change received!', payload);
+            // Handle the change
+            if (payload.eventType === 'UPDATE' && payload.new.id === participantData.id){
+                updateUI(payload.new);
+            }
+        })
+        .subscribe()
+}
+
+function updateUI(newData){
+    const two_digit_id = newData.id.slice(0,2)
+    for (let i = 1; i <= 3; i++) {
+        const isRegistered = two_digit_id == "ES" || two_digit_id =="DP"?newData[`regist_status`]:newData[`member${i}_status`];
+        const regBtn = document.getElementById(`registered_button${i}`);
+        if(regBtn && isRegistered){
+            regBtn.disabled = true;
+            regBtn.textContent = "Registered";
+            regBtn.classList.remove("bg-blue-600", "hover:bg-blue-700");
+            regBtn.classList.add("bg-gray-400", "cursor-not-allowed");
+        }
+
+    }
+}
+
 if (participantData) {
     commonData(participantData)
     getMember(participantData)
+    setupRealtimeSubscription(participantData); // Start the real-time subscription
 }
 
-//UPDATE DETAIL
-
-
-// function extractFileId(driveUrl) {
-//     const match = driveUrl.match(/\/d\/(.+?)\//);
-//     return match ? match[1] : null;
-//   }
-
-// function download(dataurl, filename) {
-//     const fileId = extractFileId(dataurl);
-//     const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-
-//     const a = document.createElement("a");
-//     a.href = downloadUrl;
-//     a.download = `${participantData.id}_Sertifikat.jpg`; // You can customize the filename
-//     document.body.appendChild(a);
-//     a.click();
-//     document.body.removeChild(a);
-//   }
-
-// document.getElementById("sertif_download").addEventListener("click", function(){
-//     download(participantData.sertif_link)
-// })
 
 
 
