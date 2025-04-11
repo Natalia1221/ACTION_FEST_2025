@@ -263,14 +263,11 @@ function getRegistStatus(){
 }
 
 if (participantData) {
-    
-    let content = commonData(participantData)
-    content += getMember(participantData)
-
+    commonData(participantData)
+    getMember(participantData)
 }
 
 //UPDATE DETAIL
-// ... (your existing code) ...
 
 function updateParticipantDataFromDatabase() {
     const params = new URLSearchParams({
@@ -305,7 +302,7 @@ function updateParticipantDataFromDatabase() {
           localStorage.setItem("participantData", JSON.stringify(participantData));
   
           // Update the displayed data on the page
-          updateDisplayedData(); // Function to refresh the displayed data
+          getMember(participantData); // Function to refresh the displayed data
         } else {
           console.error("No participant data found in the database.");
         }
