@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action Fest - Souvenir Recipient List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind Config (optional, but good practice)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {} // Keep empty or extend as needed
+                }
+            }
+        }
+    </script>
+    <style>
+        /* CSS Variables for Theme Colors */
+        :root {
+            --color-primary-500: #004c4c;
+            --color-primary-600: #004c4c;
+            --color-primary-700: #00645f;
+            --color-primary-800: #00645f;
+        }
+
+        /* Base Button Style */
+        .btn {
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 500; /* medium */
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, opacity 0.15s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+            cursor: pointer;
+            line-height: 1.25; /* Adjust line height for small buttons */
+            white-space: nowrap; /* Prevent button text wrapping */
+        }
+        /* Primary Button Style */
+        .btn-primary {
+            background-color: var(--color-primary-600);
+            color: white;
+            border-color: var(--color-primary-600);
+        }
+        .btn-primary:hover:not(:disabled) { /* Only hover if not disabled */
+            background-color: var(--color-primary-700);
+            border-color: var(--color-primary-700);
+        }
+        /* Disabled/Completed Button Style */
+        .btn-disabled {
+            background-color: #d1d5db; /* gray-300 */
+            color: #6b7280; /* gray-500 */
+            border-color: #d1d5db; /* gray-300 */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Link Style */
+        .link-primary { color: var(--color-primary-600); text-decoration: none; }
+        .link-primary:hover { color: var(--color-primary-500); text-decoration: underline;}
+        .text-primary-700 { color: var(--color-primary-700); }
+
+        /* Body Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; /* System font stack */
+            background-image: url('Assets/Gunung PNG-01.png'); /* --- UPDATE PATH AS NEEDED --- */
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-color: #f3f4f6; /* Fallback color: gray-100 */
+            padding-top: 80px; /* Space for fixed header */
+            color: #1f2937; /* Default text color: gray-800 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header Home Button Icon */
+        .home-button-icon svg {
+             width: 1.25rem; /* w-5 */
+             height: 1.25rem; /* h-5 */
+        }
+
+        /* Table Styling */
+        .table-container {
+            overflow-x: auto; /* Enable horizontal scroll on small screens */
+            border: 1px solid #e5e7eb; /* gray-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            background-color: white; /* Ensure table background is white */
+        }
+        table {
+            min-width: 100%; /* Ensure table uses container width */
+            border-collapse: collapse;
+            table-layout: fixed; /* Helps with consistent column widths */
+        }
+        th, td {
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+            vertical-align: middle; /* Align content vertically */
+            word-wrap: break-word; /* Prevent long text from breaking layout */
+        }
+        /* Header cell styling */
+        th {
+            background-color: #f9fafb; /* gray-50 */
+            font-weight: 600; /* semibold */
+            color: #374151; /* gray-700 */
+            font-size: 0.75rem; /* text-xs */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: sticky; /* Make header sticky if container scrolls */
+            top: 0;           /* Required for sticky */
+            z-index: 10;      /* Keep header above scrolling content */
+        }
+        /* Data cell styling */
+        td {
+            font-size: 0.875rem; /* text-sm */
+            color: #1f2937; /* gray-800 */
+        }
+        /* Remove bottom border from last row */
+        tbody tr:last-child td {
+             border-bottom: none;
+        }
+         /* Style for rows marked as done */
+        tr.row-done {
+             background-color: #f9fafb; /* Light gray background */
+             opacity: 0.8; /* Slightly faded */
+        }
+        tr.row-done td {
+            color: #6b7280; /* Gray text for done rows */
+        }
+
+        /* Column Widths (Example - Adjust as needed) */
+        table th:nth-child(1), table td:nth-child(1) { width: 30%; } /* Name */
+        table th:nth-child(2), table td:nth-child(2) { width: 35%; } /* School */
+        table th:nth-child(3), table td:nth-child(3) { width: 20%; } /* Reg. Time / ID */
+        table th:nth-child(4), table td:nth-child(4) { width: 15%; text-align: center;} /* Action */
+
+        /* Loading/Error Message Styling */
+        .status-message td {
+            text-align: center;
+            color: #6b7280; /* gray-500 */
+            padding: 1rem;
+            font-style: italic;
+        }
+
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Header Navigation -->
+    <header class="w-full fixed top-0 left-0 right-0 z-40 bg-white bg-opacity-80 backdrop-blur-sm shadow-md">
+         <div class="max-w-6xl mx-auto flex justify-between items-center p-3 md:p-4">
+            <!-- Logo -->
+            <a href="Home.html" class="flex items-center space-x-2">
+                <img class="max-w-[70px]" src="Assets/petralogo.png" alt="Petra Logo"> <!-- --- UPDATE PATH AS NEEDED --- -->
+                <span class="text-xl font-semibold text-primary-700 hidden sm:inline">
+                    <img src="Assets/Action Fest 3 PNG-01.png" alt="Action Fest logo" class="h-16 md:h-20 w-auto"> <!-- --- UPDATE PATH AS NEEDED --- -->
+                </span>
+            </a>
+            <!-- Navigation -->
+            <nav class="flex items-center space-x-2">
+                 <a href="Home.html" class="btn btn-primary p-2 home-button-icon" aria-label="Go to Homepage">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z" clip-rule="evenodd"/>
+                    </svg>
+                 </a>
+            </nav>
+         </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+        <!-- Content Card -->
+        <div class="max-w-5xl mx-auto bg-white p-6 sm:p-8 lg:p-10 rounded-lg shadow-xl">
+
+            <!-- Page Title -->
+            <section class="mb-8 border-b border-gray-200 pb-6">
+                <h1 class="text-3xl font-bold text-primary-700 text-center">Souvenir Recipient List</h1>
+            </section>
+
+            <!-- Recipient List Section -->
+            <section class="mb-8">
+                <div class="table-container">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>School</th>
+                                <th>Reg. Time / ID</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <!-- Table body will be populated by JavaScript -->
+                        <tbody id="souvenir-list-body" class="bg-white divide-y divide-gray-200">
+                             <!-- Initial loading message -->
+                             <tr class="status-message"><td colspan="4">Loading recipient list...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                 <p class="text-xs text-gray-500 mt-2 text-center">Click 'Done' to mark as completed and move to bottom.</p>
+            </section>
+
+            <!-- Footer Contact Link -->
+            <div class="mt-12 text-center text-sm text-gray-500 border-t border-gray-200 pt-6">
+                 <p>Need help? <a href="https://wa.me/+6289696461500" target="_blank" rel="noopener noreferrer" class="link-primary">Contact Support</a>.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableBody = document.getElementById('souvenir-list-body');
+
+            // --- CONFIGURATION ---
+            // Key used to store the recipient list array (original structure) in localStorage
+            const storageKey = "souvenirRecipients"; // <<< YOU CAN ADJUST THIS KEY NAME IF NEEDED
+
+            // Netlify Function endpoint to GET the initial list of ALL souvenir recipients
+            // This function should return the data in the *original* potentially grouped format.
+            const initialDataEndpoint = "/.netlify/functions/getSouvenirList"; // <<< CREATE THIS NETLIFY FUNCTION
+
+            // Netlify Function endpoint to POST an update for a SINGLE recipient's status
+            // This function expects a JSON body like: { id: "unique_individual_id", status: true }
+            const updateStatusEndpoint = "/.netlify/functions/markSouvenirDone"; // <<< CREATE THIS NETLIFY FUNCTION
+            // --- END CONFIGURATION ---
+
+            // --- Check if table body exists ---
+            if (!tableBody) {
+                 console.error("Critical Error: Table body element #souvenir-list-body not found. Script cannot run.");
+                 // Optionally display an error message on the page itself if needed
+                 // const mainElement = document.querySelector('main');
+                 // if(mainElement) mainElement.innerHTML = "<p style='color: red; text-align: center; padding: 2rem;'>Error: Required table element not found. Cannot display souvenir list.</p>";
+                 return; // Stop script execution if the essential table body is missing
+            }
+
+            // --- Helper Function to Flatten Grouped Data into Individual Recipient List ---
+            // Handles mixed arrays containing individual objects and group objects.
+            function flattenRecipientData(groupedData) {
+                const flatList = [];
+                if (!Array.isArray(groupedData)) {
+                    console.error("Data error: Expected an array for flattening, received:", groupedData);
+                    return flatList; // Return empty if data is invalid
+                }
+
+                groupedData.forEach((item, index) => {
+                    // Basic check for valid item structure
+                    if (!item || typeof item !== 'object') {
+                        console.warn(`Skipping invalid item at index ${index}:`, item);
+                        return;
+                    }
+
+                    // Check if it's a group item (has 'members' array)
+                    if (item.members && Array.isArray(item.members)) {
+                        item.members.forEach((member, memberIndex) => {
+                            const memberId = member ? member.memberId : null; // Expecting a unique ID for each member
+                            if (!memberId) {
+                                console.warn(`Skipping member without 'memberId' in group ${item.groupId || `at index ${index}`}, member index ${memberIndex}:`, member);
+                                return; // Skip members without a unique ID
+                            }
+                            // Determine the 'given' status for this specific member using the group's status object
+                            const isGiven = item.souvenirGivenStatus && typeof item.souvenirGivenStatus === 'object' ? !!item.souvenirGivenStatus[memberId] : false;
+
+                            flatList.push({
+                                individualId: memberId,       // The unique ID to track this person
+                                groupId: item.groupId || null, // Store original group ID if available
+                                name: member.name || 'N/A',
+                                school: item.school || 'N/A', // Use group's school if available
+                                registrationTime: item.registrationTime || null, // Use group's time if available
+                                souvenirGiven: isGiven,       // True/False status for this person
+                                isGroupMember: true           // Flag indicating origin
+                            });
+                        });
+                    }
+                    // Check if it's an individual item (has 'id' but no 'members' array)
+                    else if (item.id) {
+                         const individualId = item.id;
+                         flatList.push({
+                            individualId: individualId,
+                            groupId: null, // Not from a group structure
+                            name: item.name || 'N/A',
+                            school: item.school || 'N/A',
+                            registrationTime: item.registrationTime || null,
+                            souvenirGiven: !!item.souvenirGiven, // Ensure boolean status
+                            isGroupMember: false
+                         });
+                    } else {
+                        // Log items that don't fit either expected structure
+                        console.warn(`Skipping item at index ${index} with unknown structure:`, item);
+                    }
+                });
+                return flatList;
+            }
+
+            // --- Function to Update Original Grouped Data Structure in localStorage ---
+            // Finds the correct item (group or individual) and updates the status for the specific individualId.
+            function updateLocalStorageState(individualId, newStatus) {
+                let originalData;
+                try {
+                    // Attempt to retrieve and parse existing data
+                    const storedData = localStorage.getItem(storageKey);
+                    originalData = storedData ? JSON.parse(storedData) : [];
+                } catch (e) {
+                    console.error("Error parsing localStorage data:", e);
+                    originalData = []; // Reset to empty array if parsing fails
+                }
+
+                let updated = false;
+                // Ensure we are working with an array
+                if (!Array.isArray(originalData)) {
+                    console.error("Cannot update localStorage: stored data is not an array. Resetting.");
+                    originalData = [];
+                    // Do not return false yet, try to proceed if possible, but log the issue.
+                }
+
+                // Iterate through the original data structure
+                for (let i = 0; i < originalData.length; i++) {
+                    const item = originalData[i];
+                    if (!item) continue; // Skip potential null/undefined entries
+
+                    // Check if it's a group and contains the individual's status key
+                    if (item.members && item.souvenirGivenStatus && typeof item.souvenirGivenStatus === 'object' && item.souvenirGivenStatus.hasOwnProperty(individualId)) {
+                        item.souvenirGivenStatus[individualId] = newStatus; // Update status within the group's status object
+                        updated = true;
+                        break; // Found and updated within a group
+                    }
+                    // Check if it's a matching individual entry (and not a group)
+                    else if (!item.members && item.id === individualId) {
+                        item.souvenirGiven = newStatus; // Update the top-level status for the individual
+                        updated = true;
+                        break; // Found and updated an individual entry
+                    }
+                }
+
+                if (updated) {
+                    try {
+                        // Save the modified *original* data structure back to localStorage
+                        localStorage.setItem(storageKey, JSON.stringify(originalData));
+                    } catch (e) {
+                        console.error("Error saving updated data to localStorage:", e);
+                        alert("Could not save status locally due to storage error. Data might be inconsistent after refresh."); // Inform user
+                        updated = false; // Indicate failure if saving failed
+                    }
+                } else {
+                    // Log if the specific ID wasn't found for update
+                    console.warn(`Could not find individualId ${individualId} in current localStorage data to update status. Data might be stale or ID incorrect.`);
+                }
+                return updated; // Return true if found and successfully saved, false otherwise
+            }
+
+            // --- Function to Render the Table from Flattened Data ---
+            function renderTable(flatRecipientList) {
+                if (!tableBody) return; // Should not happen due to initial check, but good practice
+
+                // Clear current table content (status messages, previous data)
+                tableBody.innerHTML = '';
+
+                // Handle empty list after flattening
+                 if (!flatRecipientList || flatRecipientList.length === 0) {
+                    tableBody.innerHTML = '<tr class="status-message"><td colspan="4">No recipients found.</td></tr>';
+                    return;
+                 }
+
+                // Sort the list: false (not given) comes before true (given), then by name
+                 flatRecipientList.sort((a, b) => {
+                    // Primary sort by souvenirGiven status (false first)
+                    if (a.souvenirGiven !== b.souvenirGiven) {
+                        return a.souvenirGiven ? 1 : -1; // true (given) goes to bottom
+                    }
+                    // Secondary sort by name if status is the same
+                    return (a.name || '').localeCompare(b.name || '');
+                 });
+
+                // Populate table rows
+                 flatRecipientList.forEach(recipient => {
+                    const row = document.createElement('tr');
+                    // Store the unique individual ID on the row for later reference
+                    row.dataset.recipientId = recipient.individualId;
+                    if (recipient.groupId) {
+                        row.dataset.groupId = recipient.groupId; // Store group ID if applicable
+                    }
+
+                    const isDone = recipient.souvenirGiven; // Use the boolean flag
+
+                    if (isDone) {
+                        row.classList.add('row-done'); // Apply 'done' style if applicable
+                    }
+
+                    // Generate the HTML for the table row cells
+                    // Using textContent for safety where appropriate, assuming data is generally trusted but good practice
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = recipient.name || 'N/A';
+                    const schoolCell = document.createElement('td');
+                    schoolCell.textContent = recipient.school || 'N/A';
+                    const idCell = document.createElement('td');
+                    idCell.textContent = recipient.registrationTime || recipient.individualId || 'N/A'; // Display time or ID
+
+                    const actionCell = document.createElement('td');
+                    actionCell.classList.add('text-center'); // Center align action button
+                    const button = document.createElement('button');
+                    button.classList.add('btn', isDone ? 'btn-disabled' : 'btn-primary', 'btn-done-souvenir');
+                    button.dataset.recipientId = recipient.individualId; // Crucial: Use individual ID
+                    button.disabled = isDone;
+                    button.setAttribute('aria-pressed', isDone.toString()); // Accessibility state
+                    button.setAttribute('aria-label', `Mark ${recipient.name || 'recipient'} as ${isDone ? 'Completed' : 'Done'}`);
+                    button.textContent = isDone ? 'Completed' : 'Done';
+
+                    actionCell.appendChild(button);
+
+                    row.appendChild(nameCell);
+                    row.appendChild(schoolCell);
+                    row.appendChild(idCell);
+                    row.appendChild(actionCell);
+
+                    tableBody.appendChild(row); // Add the new row to the table
+                 });
+            }
+
+            // --- Function to Fetch Initial Data from the Server ---
+            async function fetchInitialData() {
+                if (!tableBody) return; // Already checked, but good practice
+                tableBody.innerHTML = '<tr class="status-message"><td colspan="4">Fetching recipient list from server...</td></tr>';
+
+                try {
+                    const response = await fetch(initialDataEndpoint); // GET request by default
+
+                    if (!response.ok) {
+                         // Try to get error message from response body for better debugging
+                         let errorText = `Status: ${response.status}. Could not retrieve details.`;
+                         try {
+                             const bodyText = await response.text();
+                             // Avoid showing generic HTML error pages directly
+                             if (!bodyText.toLowerCase().includes('<html')) {
+                                 errorText = bodyText || errorText;
+                             }
+                         } catch (_) { /* Ignore error during text extraction */ }
+                         throw new Error(`Server error - ${errorText}`);
+                    }
+
+                    // Assuming the endpoint returns the *original* potentially grouped data structure as JSON
+                    const originalData = await response.json();
+
+                    // Validate the structure of the fetched data
+                    if (!Array.isArray(originalData)) {
+                        console.error("Invalid data format received from server: Expected an array.", originalData);
+                        throw new Error("Invalid data format received from server.");
+                    }
+
+                    console.log(`Successfully fetched ${originalData.length} records from server.`);
+
+                    // Store the fresh (original structure) data in localStorage, overwriting old data
+                    try {
+                        localStorage.setItem(storageKey, JSON.stringify(originalData));
+                    } catch (e) {
+                        console.error("Error saving fetched data to localStorage:", e);
+                        // Decide if this is critical - maybe inform user?
+                        alert("Warning: Could not save the latest data locally. Using fetched data for now, but state might not persist if page is closed.");
+                    }
+
+                    // Flatten the fresh data for display
+                    const flatList = flattenRecipientData(originalData);
+                    // Render the table using the flattened list
+                    renderTable(flatList);
+
+                } catch (error) {
+                    console.error("Failed to fetch initial data:", error);
+                    tableBody.innerHTML = `<tr class="status-message"><td colspan="4">Error loading data: ${error.message}. Trying local data...</td></tr>`;
+
+                    // --- Fallback to LocalStorage ---
+                    // Attempt to load and render from localStorage if the fetch fails
+                    let localData = [];
+                    try {
+                        const localDataString = localStorage.getItem(storageKey);
+                        localData = localDataString ? JSON.parse(localDataString) : [];
+                        if (!Array.isArray(localData)) { // Validate local data too
+                            console.warn("Local storage data is not an array, resetting.");
+                            localData = [];
+                        }
+                    } catch (localError) {
+                        console.error("Failed to parse local data after fetch error:", localError);
+                        localData = []; // Ensure localData is an array
+                    }
+
+                    const flatList = flattenRecipientData(localData);
+                    // Add slight delay so user sees the error message before table renders (optional)
+                    setTimeout(() => {
+                        if (flatList.length > 0) {
+                            console.log("Rendering data from localStorage fallback.");
+                            renderTable(flatList);
+                        } else {
+                            tableBody.innerHTML = `<tr class="status-message"><td colspan="4">Error loading data. Could not fetch from server or load local data.</td></tr>`;
+                        }
+                    }, 1500);
+                    // --- End Fallback ---
+                }
+            }
+
+            // --- Event Listener for Clicking "Done" Buttons (using Event Delegation) ---
+            tableBody.addEventListener('click', function(event) {
+                // Find the closest button with the target class from the clicked element
+                const button = event.target.closest('.btn-done-souvenir');
+
+                // Proceed only if a valid, enabled button was clicked
+                if (button && !button.disabled) {
+                    const individualId = button.dataset.recipientId; // Get the unique ID for this person
+                    const row = button.closest('tr'); // Get the table row element
+
+                    if (!row || !individualId) {
+                        console.error("Could not find row or individualId for the clicked button.", button);
+                        return; // Stop if essential data is missing
+                    }
+
+                    // Prepare the data payload for the backend update
+                    const backendUpdateData = {
+                        id: individualId, // The unique ID of the person receiving the souvenir
+                        status: true      // Explicitly setting the new status to true
+                    };
+
+                    // --- 1. Attempt Backend Update ---
+                    // Optimistic UI: Disable button immediately for better perceived performance
+                    button.disabled = true;
+                    button.textContent = 'Saving...';
+
+                    fetch(updateStatusEndpoint, { // Use the specific endpoint for updates
+                        method: 'POST', // Or PUT, ensure it matches your backend function's expectation
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Add other headers like Authorization if needed by your Netlify function
+                        },
+                        body: JSON.stringify(backendUpdateData)
+                    })
+                    .then(response => {
+                        // Check if the response was successful (e.g., 2xx status code)
+                        if (!response.ok) {
+                            // Try to parse error details if possible, otherwise throw generic error
+                            return response.text().then(text => {
+                                // Try to parse JSON first, fallback to text
+                                let detail = text || 'No details';
+                                try { detail = JSON.parse(text).message || detail; } catch(_) {}
+                                throw new Error(`Server error: ${response.status} ${response.statusText} - ${detail}`);
+                            });
+                        }
+                        // Check content type before parsing JSON
+                        const contentType = response.headers.get("content-type");
+                        if (contentType?.includes("application/json")) {
+                            return response.json(); // Parse JSON response
+                        } else {
+                            return response.text(); // Handle plain text response (or treat as success with no data)
+                        }
+                    })
+                    .then(data => {
+                        console.log('Backend update successful for individual:', individualId, data);
+
+                        // --- 2. Update LocalStorage State (Original Structure) ---
+                        const localStorageUpdated = updateLocalStorageState(individualId, true);
+
+                        if (localStorageUpdated) {
+                            // --- 3. Update UI (Row and Button) ---
+                            row.classList.add('row-done');
+                            button.textContent = 'Completed';
+                            // button.disabled = true; // Already disabled
+                            button.classList.remove('btn-primary');
+                            button.classList.add('btn-disabled');
+                            button.setAttribute('aria-pressed', 'true');
+
+                            // --- 4. Move Row to Bottom ---
+                            // Re-appending the existing row automatically moves it to the end of the parent (tbody)
+                            tableBody.appendChild(row);
+
+                        } else {
+                            // If localStorage update failed AFTER backend success, the state is inconsistent
+                            console.error("CRITICAL: Backend updated but localStorage failed to save for ID:", individualId);
+                            alert(`Error: Status updated on server, but local data could not be saved for ${individualId}. The change might be lost on refresh. Please report this issue.`);
+                            // Reset button state visually, although the data is inconsistent
+                            button.textContent = 'Done';
+                            button.disabled = false; // Allow retry maybe? Or leave disabled? Difficult choice.
+                            button.classList.remove('btn-disabled');
+                            button.classList.add('btn-primary');
+                            button.setAttribute('aria-pressed', 'false');
+                        }
+                    })
+                    .catch(error => {
+                        // Handle fetch errors (network issues, server errors)
+                        console.error(`Failed to update backend for individual ${individualId}:`, error);
+                        alert(`Failed to mark souvenir as done for ${individualId}. Error: ${error.message}. Please check connection or try again.`);
+                        // Re-enable the button on failure so user can retry
+                        button.disabled = false;
+                        button.textContent = 'Done';
+                        // No need to change classes back unless they were changed optimistically
+                    });
+                }
+            });
+
+            // --- Initial Action on Page Load ---
+            console.log("Souvenir page loaded. Fetching initial data...");
+            fetchInitialData(); // Fetch data from server when the page loads
+
+        });
+    </script>
+
+</body>
+</html>

@@ -158,19 +158,6 @@ function danceMember(participantData){
         `
 }
 
-function eng_designMember(participantData){
-    document.getElementById("participant").innerHTML = "Participant "
-    const div = document.createElement("div")
-    div.innerHTML = `
-        <h3 class="text-lg font-semibold text-gray-700" id="name">${participantData.full_name}</h3> 
-        <p class="text-sm text-gray-600 mt-1" id="sch_grade">
-            <span class="font-medium">School:</span> ${participantData.school} <br> 
-            <span class="font-medium">Grade:</span> ${participantData.grade}  
-        </p>
-    `
-    document.getElementById("participant_list").appendChild(div)
-}
-
 function getMember(participantData){
     const container = document.getElementById("participant_list")
     
@@ -278,22 +265,134 @@ function getRegistStatus(){
 if (participantData) {
     
     let content = commonData(participantData)
-
-    // if(two_digit_id=="DC" || two_digit_id=="MT"){
-    //     if(two_digit_id == "DC"){
-    //         content += danceMember(participantData)
-    //     }
-         
-    //     content += getMember(participantData)
-        
-    // }else{
-    //     content += eng_designMember(participantData)
-    // }
     content += getMember(participantData)
 
 }
 
+//UPDATE DETAIL
+// ... (your existing code) ...
 
+function updateParticipantDataFromDatabase() {
+    const params = new URLSearchParams({
+      table: table,
+      code: participantData.id,
+    });
+  
+    fetch(`/.netlify/functions/getParticipantData?${params.toString()}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.length > 0) {
+          // Assuming the first item in the array is the participant data
+          const updatedData = data[0];
+  
+          // Update participantData with the fetched data
+          if (two_digit_id === "DC" || two_digit_id === "MT") {
+            // Handle team data
+            for (let key in updatedData) {
+              if (key.startsWith("member") || key === "group_name") {
+                participantData[key] = updatedData[key];
+              }
+            }
+          } else {
+            // Handle individual data
+            participantData.full_name = updatedData.full_name;
+            participantData.school = updatedData.school;
+            participantData.grade = updatedData.grade;
+            participantData.regist_status = updatedData.regist_status;
+          }
+  
+          // Update localStorage
+          localStorage.setItem("participantData", JSON.stringify(participantData));
+  
+          // Update the displayed data on the page
+          updateDisplayedData(); // Function to refresh the displayed data
+        } else {
+          console.error("No participant data found in the database.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching participant data:", error);
+      });
+  }
+  
+  function updateDisplayedData() {
+      document.getElementById('email').innerHTML = participantData.email
+      document.getElementById('competition').innerHTML = {MT : "MATH SCIENCE", ES : "ENGLISH STORY TELLING", DP : "DIGITAL DESIGN", DC : "MODERN DANCE"}[participantData.id.slice(0,2)]
+      document.getElementById("wa_num").innerHTML = participantData.wa_num
+      if (participantData.id.slice(0,2) != "DC"){
+          document.getElementById("group").classList.add("hidden");
+      }else{
+          document.getElementById("group_name").innerHTML = participantData.group_name
+      }
+  
+      const container = document.getElementById("participant_list")
+      container.innerHTML = ""; // Clear existing data
+  
+      for (let i = 1; i <= 3; i++) {
+          const name = two_digit_id == "ES" || two_digit_id =="DP"?participantData[`full_name`]:participantData[`member${i}_name`];
+          const school = two_digit_id == "ES" || two_digit_id =="DP"?participantData[`school`]:participantData[`member${i}_school`];
+          const grade = two_digit_id == "ES" || two_digit_id =="DP"?participantData[`grade`]:participantData[`member${i}_grade`];
+          const isRegistered = two_digit_id == "ES" || two_digit_id =="DP"?participantData[`regist_status`]:participantData[`member${i}_status`];
+  
+          if(name != "none"){
+              const div = document.createElement("div");
+              const border = document.createElement("hr")
+              border.className = "my-6 border-gray-300"
+              div.className = "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ";
+  
+              div.innerHTML += `
+                  <div>
+                      <h3 class="text-lg font-semibold text-gray-700" id="name${i}">${name}</h3> 
+                      <p class="text-sm text-gray-600 mt-1" id="sch_grade${i}">
+                          <span class="font-medium">School:</span> ${school} <br> 
+                          <span class="font-medium">Grade:</span> ${grade} 
+                      </p>
+                  </div>
+                  <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto sm:items-center">
+                      <button value="${i}" id="registered_button${i}" class="registered_button w-full sm:w-auto py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium ${isRegistered ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'} transition duration-150 ease-in-out" ${isRegistered ? 'disabled' : ''}>
+                          ${isRegistered ? 'Registered' : 'Register Now'}
+                      </button>
+  
+                      <button value="${i}" id="edit_button${i}" class="w-full sm:w-auto py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out">
+                          Edit Data
+                      </button>
+                  </div>
+              `;
+  
+              container.appendChild(div);
+              container.appendChild(border)
+  
+              // Register button event
+              const regBtn = document.getElementById(`registered_button${i}`);
+              regBtn.addEventListener("click", () => {
+                  fetch( `/.netlify/functions/register?table=${table}&code=${participantData.id}&column=member${i}_status&data="none"`)
+                  .then(res => res.json())
+  
+                  showConfirmationModal()
+                  participantData[`member${i}_status`] = true
+                  localStorage.setItem("participantData", JSON.stringify(participantData));
+                  regBtn.disabled = true;
+                  regBtn.textContent = "Registered";
+                  regBtn.classList.remove("bg-blue-600", "hover:bg-blue-700");
+                  regBtn.classList.add("bg-gray-400", "cursor-not-allowed");
+              });
+  
+              const editBtn = document.getElementById(`edit_button${i}`);
+              editBtn.addEventListener("click", () => {
+                  showEditModal(i)
+  
+              });
+          }
+          if (two_digit_id == "ES" || two_digit_id =="DP"){
+              break
+          }
+      }
+  }
+  
+  // Initial update and set interval for subsequent updates
+  updateParticipantDataFromDatabase();
+  setInterval(updateParticipantDataFromDatabase, 5000); // 5000 milliseconds = 5 seconds
+  
 // function extractFileId(driveUrl) {
 //     const match = driveUrl.match(/\/d\/(.+?)\//);
 //     return match ? match[1] : null;
