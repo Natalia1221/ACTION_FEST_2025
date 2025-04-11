@@ -278,7 +278,7 @@ function updateParticipantDataFromDatabase() {
       code: participantData.id,
     });
   
-    fetch(`/.netlify/functions/getParticipantData?${params.toString()}`)
+    fetch(`/.netlify/functions/database?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => {
         if (data && data.length > 0) {
@@ -392,7 +392,7 @@ function updateParticipantDataFromDatabase() {
   // Initial update and set interval for subsequent updates
   updateParticipantDataFromDatabase();
   setInterval(updateParticipantDataFromDatabase, 5000); // 5000 milliseconds = 5 seconds
-  
+
 // function extractFileId(driveUrl) {
 //     const match = driveUrl.match(/\/d\/(.+?)\//);
 //     return match ? match[1] : null;
