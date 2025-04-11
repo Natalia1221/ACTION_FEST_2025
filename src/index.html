@@ -37,8 +37,8 @@
                  </a>
                  <!-- cursor-not-allowed pointer-events-none -->
                  <a id="certificate-button"
-                    href="certification.html" 
-                    class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-gray-300 text-gray-500 transition duration-150 ease-in-out"> 
+                    href="#" 
+                    class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none transition duration-150 ease-in-out"> 
                     See Certificate
                  </a>
             </nav>
@@ -360,7 +360,7 @@
             if (certificateButton) {
                 // Set the date when certificates become available (Year, MonthIndex, Day)
                 // Event Day: April 12th, 2025 (Month is 0-indexed, so April is 3)
-                const eventStartDate = new Date(2025, 3, 12, 0, 0, 0); // Start of the event day
+                const eventStartDate = new Date(2025, 3, 19, 0, 0, 0); // Start of the event day
 
                 const currentDate = new Date();
                 currentDate.setHours(0, 0, 0, 0); // Compare dates only, ignore time
