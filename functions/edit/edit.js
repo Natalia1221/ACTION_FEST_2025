@@ -9,21 +9,20 @@ const supabaseUrl = process.env.APIURL_SECRET
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const handler = async (event) => {
-  const {table, code, column, data} = event.queryStringParameters
+  const {table, code, name, school, grade, i} = event.queryStringParameters
+  console.log("MASUK")
   
   let updateObject = {};
-  if(column.split("_")[1]=="status"){
-    if (code.slice(0, 2) === "MT" || code.slice(0, 2) === "DC") {
-      const key = column;
-      updateObject[key] = true;
-    } else {
-      updateObject["regist_status"] = true;
-    }
-    
-  }else{
-    updateObject = data;
+  if (code.slice(0, 2) === "MT" || code.slice(0, 2) === "DC") {
+        updateObject[`member${i}_name`] = name
+        updateObject[`member${i}_school`] = school
+        updateObject[`member${i}_grade`] = grade
+  } else {
+        updateObject[`full_name`] = name
+        updateObject[`school`] = school
+        updateObject[`grade`] = grade
   }
-
+    
   
 
   try{
@@ -36,12 +35,14 @@ const handler = async (event) => {
       statusCode: 200,
       body:JSON.stringify(data)
     }
-  }catch(error){
-    const{status, statusText, header, data} = error.response
-    return{
-      statusCode: status,
-      body: JSON.stringify({status, statusText, header, data})
-    }
+  }catch (error) {
+    return {
+      statusCode: error?.response?.status || 500,
+      body: JSON.stringify({
+        message: error.message,
+        details: error?.response?.data || null,
+      }),
+    };
   }
 }
 

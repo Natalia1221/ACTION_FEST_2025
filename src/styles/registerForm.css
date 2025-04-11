@@ -43,7 +43,7 @@ body.modal-open { overflow: hidden; }
 
 /* Background Image Styles */
 body {
-    background-image: url('Assets/Gunung PNG-01.png');
+    background-image: url('../Assets/Gunung PNG-01.png');
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;

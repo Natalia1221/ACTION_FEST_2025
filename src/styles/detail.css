@@ -1,0 +1,92 @@
+
+:root {
+    --color-primary-500: #004c4c;
+    --color-primary-600: #004c4c;
+    --color-primary-700: #00645f;
+    --color-primary-800: #00645f;
+}
+
+/* Keep general utility classes */
+.btn-primary { background-color: var(--color-primary-600); color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; transition: background-color 0.15s ease-in-out; display: inline-flex; /* Added for alignment */ align-items: center; /* Added for alignment */ justify-content: center; /* Added for alignment */ }
+.btn-primary:hover { background-color: var(--color-primary-700); }
+.btn-primary:focus {
+    outline: 2px solid transparent; outline-offset: 2px;
+    --tw-ring-offset-shadow: var(--tw-ring-offset-width, 0px) 0 0 0 var(--tw-ring-offset-color, #fff);
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, var(--color-primary-500));
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+/* Removed btn-secondary as it's not used in this specific layout */
+
+.link-primary { color: var(--color-primary-600); }
+.link-primary:hover { color: var(--color-primary-500); text-decoration: underline;}
+.text-primary-700 { color: var(--color-primary-700); }
+
+/* Adjusted Body Style - RESTORED BACKGROUND */
+body {
+    background-image: url('../Assets/Gunung PNG-01.png'); /* Restored from original */
+    background-size: cover;                           /* Restored from original */
+    background-position: center center;               /* Restored from original */
+    background-attachment: fixed;                     /* Restored from original */
+    background-color: #f3f4f6; /* Fallback color */
+    padding-top: 80px; /* Keep padding for fixed header */
+}
+
+/* Keep modal styles if needed for consistency, though not actively used here */
+.modal-overlay { transition: opacity 0.3s ease-in-out; }
+.modal-content { transition: transform 0.3s ease-in-out; }
+body.modal-open { overflow: hidden; }
+/* =========================================== */
+
+/* Helper class for label alignment */
+.info-label {
+    font-weight: 500; /* medium */
+    color: #4b5563; /* gray-600 */
+    display: block; /* Stack on small screens */
+}
+.info-value {
+     color: #1f2937; /* gray-800 */
+     display: block; /* Stack on small screens */
+}
+
+@media (min-width: 640px) { /* sm breakpoint */
+    .info-label {
+        display: inline-block;
+        width: 120px; /* Adjust width as needed */
+        margin-right: 0.5rem; /* space between label and value */
+        vertical-align: top; /* Align top if value wraps */
+    }
+    .info-value {
+         display: inline-block;
+    }
+}
+
+/* Style for the registration confirmation */
+.registration-confirmed {
+    background-color: #98dcdc; /* Modified green-100 */
+    border-left: 4px solid #004c4c; /* Modified green-500 */
+    padding: 0.75rem 1rem; /* py-3 px-4 */
+    margin-bottom: 1.5rem; /* mb-6 */
+    display: flex;
+    align-items: center;
+}
+.registration-confirmed svg {
+     flex-shrink: 0;
+     width: 1.25rem; /* w-5 */
+     height: 1.25rem; /* h-5 */
+     color: #004c4c; /* Modified green-600 */
+     margin-right: 0.75rem; /* mr-3 */
+}
+.registration-confirmed p {
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* medium */
+    color: #00645f; /* Modified green-800 */
+}
+
+/* Style for the Home button Icon */
+.home-button-icon svg {
+     width: 1.25rem; /* w-5 */
+     height: 1.25rem; /* h-5 */
+     /* color: white; /* Icon color set by btn-primary */
+}
+
+

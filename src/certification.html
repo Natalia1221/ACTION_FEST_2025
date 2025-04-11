@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration - Action Fest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: {} } } }
+    </script>
+    <style>
+        :root {
+            --color-primary-500: #004c4c;
+            --color-primary-600: #004c4c;
+            --color-primary-700: #00645f;
+            --color-primary-800: #00645f;
+        }
+
+        .modal-overlay { transition: opacity 0.3s ease-in-out; }
+        .modal-content { transition: transform 0.3s ease-in-out; }
+        body.modal-open { overflow: hidden; }
+
+        .confirmation-label { font-weight: 600; color: #4b5563; }
+        .confirmation-value { color: #1f2937; margin-left: 0.5rem; }
+
+        [role="option"][aria-selected="true"] { background-color: #f3f4f6; }
+        .option-info-button {
+             color: var(--color-primary-600); margin-left: auto; padding: 0.25rem;
+             border-radius: 9999px; flex-shrink: 0;
+        }
+        .option-info-button:hover { background-color: #e5e7eb; color: var(--color-primary-800); }
+        .option-info-button:focus {
+             outline: 2px solid transparent; outline-offset: 2px;
+             --tw-ring-color: var(--color-primary-500); box-shadow: 0 0 0 2px var(--tw-ring-color);
+        }
+        .input-error { border-color: #f59120; }
+        .input-error:focus { --tw-ring-color: #f59120; border-color: #f59120; }
+
+        .btn-primary { background-color: var(--color-primary-600); color: white; }
+        .btn-primary:hover { background-color: var(--color-primary-700); }
+        .btn-primary:focus {
+            outline: 2px solid transparent; outline-offset: 2px;
+            --tw-ring-offset-shadow: var(--tw-ring-offset-width, 0px) 0 0 0 var(--tw-ring-offset-color, #fff);
+            --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, var(--color-primary-500));
+            box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        .link-primary { color: var(--color-primary-600); }
+        .link-primary:hover { color: var(--color-primary-500); }
+        .text-primary-700 { color: var(--color-primary-700); }
+
+        .focus\:border-\[var\(--color-primary-500\)\]:focus { border-color: var(--color-primary-500); }
+        .focus\:ring-primary-500:focus {
+             --tw-ring-opacity: 1; --tw-ring-color: var(--color-primary-500);
+             --tw-ring-offset-shadow: var(--tw-ring-offset-width, 0px) 0 0 0 var(--tw-ring-offset-color, #fff);
+             --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color);
+             box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        .input-error { border-color: #f59120; }
+        .input-error:focus { --tw-ring-color: #f59120; border-color: #f59120; }
+        .error-message { color: #f59120; font-size: 0.75rem; margin-top: 0.25rem; }
+
+
+        body {
+            background-image: url('Assets/Gunung PNG-01.png');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased">
+
+    <div class="w-full fixed top-0 left-0 right-0 z-50 flex lg:justify-end p-2 md:p-4 lg:p-4 drop-shadow-lg">
+        <a href="Home.html" class="flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium btn-primary transition duration-150 ease-in-out">
+            <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z" clip-rule="evenodd"/>
+            </svg>
+        </a>
+    </div>
+
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24 relative z-10">
+            <div class="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-xl">
+
+                <div class="mb-8 flex flex-col items-center text-center">
+                    <img class="h-auto max-w-[150px] sm:max-w-[200px] my-4" src="Assets/Action Fest 3 PNG-01.png" alt="Action Fest Logo">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mt-4">Certification</h1>
+                </div>
+
+                <div class="my-6">
+                    <iframe
+                        class="w-full aspect-video rounded border border-gray-300"
+                        src="https://drive.google.com/file/d/1H89Nar3Rn8DoKgmLl9B1OVOLRM0mWFyC/preview"
+                        allow="autoplay"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <a href="https://drive.google.com/uc?export=download&id=1H89Nar3Rn8DoKgmLl9B1OVOLRM0mWFyC"
+                       download="ActionFest_CertificationInfo"
+                       target="_blank"
+                       rel="noopener noreferrer" 
+                       class="inline-flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium btn-primary transition duration-150 ease-in-out">
+                        <svg class="w-5 h-5 mr-2 -ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        Download Certification Info
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+</body>
+</html>
