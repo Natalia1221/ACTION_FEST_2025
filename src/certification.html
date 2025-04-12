@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Registration - Action Fest</title>
+    <title>Generate Your Certificate - Action Fest</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { theme: { extend: { colors: {} } } }
@@ -17,26 +17,6 @@
             --color-primary-800: #00645f;
         }
 
-        .modal-overlay { transition: opacity 0.3s ease-in-out; }
-        .modal-content { transition: transform 0.3s ease-in-out; }
-        body.modal-open { overflow: hidden; }
-
-        .confirmation-label { font-weight: 600; color: #4b5563; }
-        .confirmation-value { color: #1f2937; margin-left: 0.5rem; }
-
-        [role="option"][aria-selected="true"] { background-color: #f3f4f6; }
-        .option-info-button {
-            color: var(--color-primary-600); margin-left: auto; padding: 0.25rem;
-            border-radius: 9999px; flex-shrink: 0;
-        }
-        .option-info-button:hover { background-color: #e5e7eb; color: var(--color-primary-800); }
-        .option-info-button:focus {
-            outline: 2px solid transparent; outline-offset: 2px;
-            --tw-ring-color: var(--color-primary-500); box-shadow: 0 0 0 2px var(--tw-ring-color);
-        }
-        .input-error { border-color: #f59120; }
-        .input-error:focus { --tw-ring-color: #f59120; border-color: #f59120; }
-
         .btn-primary { background-color: var(--color-primary-600); color: white; }
         .btn-primary:hover { background-color: var(--color-primary-700); }
         .btn-primary:focus {
@@ -45,143 +25,438 @@
             --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, var(--color-primary-500));
             box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
         }
-        .link-primary { color: var(--color-primary-600); }
-        .link-primary:hover { color: var(--color-primary-500); }
-        .text-primary-700 { color: var(--color-primary-700); }
+        .btn-secondary { background-color: #e5e7eb; color: #374151; border: 1px solid #d1d5db; }
+        .btn-secondary:hover { background-color: #d1d5db; }
 
-        .focus\:border-\[var\(--color-primary-500\)\]:focus { border-color: var(--color-primary-500); }
-        .focus\:ring-primary-500:focus {
-            --tw-ring-opacity: 1; --tw-ring-color: var(--color-primary-500);
-            --tw-ring-offset-shadow: var(--tw-ring-offset-width, 0px) 0 0 0 var(--tw-ring-offset-color, #fff);
-            --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color);
-            box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        /* Input Styles */
+        .input-field {
+            display: block; width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db;
+            border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            font-size: 0.875rem; line-height: 1.25rem; color: #1f2937; background-color: #fff;
         }
-        .input-error { border-color: #f59120; }
-        .input-error:focus { --tw-ring-color: #f59120; border-color: #f59120; }
-        .error-message { color: #f59120; font-size: 0.75rem; margin-top: 0.25rem; }
+        .input-field::placeholder { color: #9ca3af; }
+        .input-field:focus {
+            outline: 2px solid transparent; outline-offset: 2px; border-color: var(--color-primary-500);
+            --tw-ring-color: var(--color-primary-500); box-shadow: 0 0 0 1px var(--tw-ring-color);
+        }
 
+        .input-error { border-color: #f59120 !important; }
+        .input-error:focus {
+            border-color: #f59120 !important; --tw-ring-color: #f59120 !important;
+            box-shadow: 0 0 0 1px var(--tw-ring-color) !important;
+         }
+        .error-message { color: #f59120; font-size: 0.875rem; margin-top: 0.25rem; }
 
         body {
             background-image: url('Assets/Gunung PNG-01.png');
-            background-size: cover;
-            background-position: center center;
-            background-attachment: fixed;
-            background-color: #f3f4f6;
+            background-size: cover; background-position: center center; background-attachment: fixed;
+            background-color: #f3f4f6; font-family: sans-serif;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
         }
+        /* Hide elements used only for processing */
+        .processing-element { display: none; }
     </style>
 </head>
 
 <body class="font-sans antialiased">
 
+    <!-- Hidden Image elements to load the templates -->
+    <img id="participantTemplateImage" src="" alt="Participant Certificate Template" class="processing-element" crossorigin="anonymous">
+    <img id="championTemplateImage" src="" alt="Champion Certificate Template" class="processing-element" crossorigin="anonymous">
+    <!-- Hidden Canvas element for drawing -->
+    <canvas id="certificateCanvas" class="processing-element"></canvas>
+
+
     <div class="w-full fixed top-0 left-0 right-0 z-50 flex lg:justify-end p-2 md:p-4 lg:p-4 drop-shadow-lg">
-        <a href="index.html" class="flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium btn-primary transition duration-150 ease-in-out">
-            <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z" clip-rule="evenodd"/>
-            </svg>
+        <a href="Home.html" class="flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium btn-primary transition duration-150 ease-in-out">
+            <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z" clip-rule="evenodd"/></svg>
+             <span class="ml-2 hidden sm:inline">Home</span>
         </a>
     </div>
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24 relative z-10">
-        <div class="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-xl">
+        <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-xl">
 
             <div class="mb-8 flex flex-col items-center text-center">
-                <img class="h-auto max-w-[150px] sm:max-w-[200px] my-4" src="Assets/Action Fest 3 PNG-01.png" alt="Action Fest Logo">
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mt-4">Certification</h1>
+                 <img class="h-auto max-w-[150px] sm:max-w-[200px] my-4" src="Assets/Action Fest 3 PNG-01.png" alt="Action Fest Logo">
+                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mt-4">Generate Your Certificate</h1>
+                 <p class="mt-2 text-gray-600">Enter your full registered name to generate and download your certificate(s).</p>
             </div>
 
-            <div>
-                <label for="registration-code" class="block text-sm font-medium text-gray-700 mb-1">Input Your Name</label>
-                <input type="text" name="registration-code" id="registration-code" required placeholder="Enter your name"
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus\:ring-primary-500 focus\:border-\[var\(--color-primary-500\)\] sm:text-sm">
-                <p class="error-message hidden" id="registration-code-error">Please enter your name.</p>
+            <!-- Input Form -->
+            <form id="certificate-form" class="max-w-md mx-auto space-y-4 mb-8">
+                <div>
+                    <label for="full-name-input" class="block text-sm font-medium text-gray-700 mb-1">
+                        Full Name (as registered)
+                    </label>
+                    <input type="text" id="full-name-input" name="full-name"
+                           class="input-field"
+                           placeholder="Enter your full name exactly as registered" required>
+                    <p id="full-name-error" class="error-message hidden"></p>
+                </div>
+                 <div class="text-center pt-4">
+                     <button id="generate-button" type="submit"
+                             class="inline-flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium btn-primary transition duration-150 ease-in-out">
+                         Find & Prepare Certificate(s)
+                     </button>
+                 </div>
+            </form>
+
+
+            <!-- Status/Loading/Error Area -->
+            <div id="status-message-area" class="my-6 text-center min-h-[24px]">
+                 <p id="loading-message" class="text-gray-600 hidden">Searching...</p>
+                 <p id="error-message" class="text-red-600 font-semibold hidden"></p>
+                 <p id="success-message" class="text-green-600 font-semibold hidden"></p> <!-- Message set dynamically -->
             </div>
 
-            <div class="my-6" id="certificate-display">
-
-            </div>
-
-            <div class="mt-8 text-center">
-                <button id="show-certificate" class="inline-flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium btn-primary transition duration-150 ease-in-out">
-                    Show Certificate
+             <!-- Download Area (Participant Cert) - Shown on success -->
+            <div id="participant-download-area" class="my-6 text-center hidden">
+                 <p class="text-sm font-medium text-gray-700 mb-2">Participant Certificate:</p>
+                 <button id="participant-download-button" type="button"
+                    class="inline-flex items-center justify-center py-2 px-6 border border-gray-300 rounded-md shadow-sm text-base font-medium bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary-500)]">
+                    <svg class="w-5 h-5 mr-2 -ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                    Download Participant Cert
                 </button>
-                <a href="https://drive.google.com/uc?export=download&id=1H89Nar3Rn8DoKgmLl9B1OVOLRM0mWFyC"
-                    download="ActionFest_CertificationInfo"
-                    target="_blank"
-                    rel="noopener noreferrer" 
-                    id="link_download"
-                    class="inline-flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium btn-primary transition duration-150 ease-in-out mt-4">
-                    <svg class="w-5 h-5 mr-2 -ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
-                    Download Certification Info
-                </a>
             </div>
 
+             <!-- Download Area (Champion Cert) - Shown if champion > 0 -->
+            <div id="champion-download-area" class="my-6 text-center hidden">
+                 <p class="text-sm font-medium text-gray-700 mb-2"><span id="champion-rank-text"></span> Certificate:</p>
+                 <button id="champion-download-button" type="button"
+                    class="inline-flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium btn-primary"> <!-- Champion gets primary style -->
+                    <svg class="w-5 h-5 mr-2 -ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                    Download <span id="champion-button-rank-text"></span> Cert
+                </button>
+            </div>
+
+             <p class="text-center text-sm text-gray-500 mt-4">
+                 If you encounter issues, please verify your name spelling or contact support.
+             </p>
         </div>
     </div>
 
     <script>
-        function extractFileId(driveUrl) {
-            const match = driveUrl.match(/\/file\/d\/([^\/]+)/);
-            return match ? match[1] : null;
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const form = document.getElementById('certificate-form');
+            const nameInput = document.getElementById('full-name-input');
+            const nameError = document.getElementById('full-name-error');
+            const generateButton = document.getElementById('generate-button');
+            const loadingMessage = document.getElementById('loading-message');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            // Download Areas & Buttons
+            const participantDownloadArea = document.getElementById('participant-download-area');
+            const participantDownloadButton = document.getElementById('participant-download-button');
+            const championDownloadArea = document.getElementById('champion-download-area');
+            const championDownloadButton = document.getElementById('champion-download-button');
+            const championRankText = document.getElementById('champion-rank-text'); // Span for description
+            const championButtonRankText = document.getElementById('champion-button-rank-text'); // Span for button text
+            // Hidden elements
+            const participantTemplateImage = document.getElementById('participantTemplateImage');
+            const championTemplateImage = document.getElementById('championTemplateImage');
+            const canvas = document.getElementById('certificateCanvas');
+            const ctx = canvas.getContext('2d');
 
-        document.getElementById('show-certificate').addEventListener('click', async function() {
-            const name = document.getElementById('registration-code').value;
-            const certificateDisplay = document.getElementById('certificate-display');
-            const errorMessage = document.getElementById('registration-code-error');
+            // --- State Variable ---
+            // Stores { name, school, participantTemplateSrc, championTemplateSrc | null, championRankPrefix | null, championRankText | null }
+            let certificateDataForDownload = null;
 
-            if (name.trim() === '') {
-                certificateDisplay.innerHTML = '';
-                errorMessage.classList.remove('hidden');
-                errorMessage.textContent = 'Please enter your name.';
-                return;
+            // --- Helper Functions ---
+            const clearMessagesAndErrors = () => {
+                loadingMessage.classList.add('hidden');
+                errorMessage.classList.add('hidden'); errorMessage.textContent = '';
+                successMessage.classList.add('hidden'); successMessage.textContent = ''; // Clear success message too
+                nameError.classList.add('hidden'); nameInput.classList.remove('input-error');
+                participantDownloadArea.classList.add('hidden'); // Hide both download areas
+                championDownloadArea.classList.add('hidden');
+                certificateDataForDownload = null; // Clear state
+                // Reset image sources to prevent accidental reuse
+                participantTemplateImage.src = '';
+                championTemplateImage.src = '';
+            };
+            const showLoading = (message = "Loading...") => { clearMessagesAndErrors(); loadingMessage.textContent = message; loadingMessage.classList.remove('hidden'); }
+            const showError = (message, fieldElement = null, errorElement = null) => { clearMessagesAndErrors(); if (fieldElement && errorElement) { errorElement.textContent = message; errorElement.classList.remove('hidden'); fieldElement.classList.add('input-error'); fieldElement.focus(); } else { errorMessage.textContent = message; errorMessage.classList.remove('hidden'); } }
+            const showSuccess = (message) => { loadingMessage.classList.add('hidden'); errorMessage.classList.add('hidden'); successMessage.textContent = message; successMessage.classList.remove('hidden'); /* Don't show download area here, handled by image loads */ }
+
+
+            // --- Canvas Drawing Function ---
+            function drawNameAndSchoolOnCanvas(imageElement, participantName, schoolName) {
+                 try {
+                     canvas.width = imageElement.naturalWidth;
+                     canvas.height = imageElement.naturalHeight;
+                     ctx.drawImage(imageElement, 0, 0);
+
+                     // --- !!! IMPORTANT: ADJUST THESE DRAWING PARAMETERS !!! ---
+                     // Participant Name
+                     ctx.font = 'bold 60px Arial'; // Example Font
+                     ctx.fillStyle = 'black';      // Example Color
+                     ctx.textAlign = 'center';     // Example Alignment
+                     const nameX = canvas.width / 2;
+                     const nameY = canvas.height * 0.32; // Example Y Position (32% from top)
+                     ctx.fillText(participantName, nameX, nameY);
+
+                     // School Name
+                     ctx.font = 'bold italic 30px Arial'; // Example Font
+                     ctx.fillStyle = 'black';             // Example Color
+                     ctx.textAlign = 'center';            // Example Alignment
+                     const schoolX = canvas.width / 2;
+                     // !! ADJUST THIS SPACING BASED ON YOUR TEMPLATE !!
+                     const schoolY = nameY + 80; // Example: 80px below name
+                     ctx.fillText(schoolName, schoolX, schoolY);
+                     // --- !!! END ADJUSTMENT AREA !!! ---
+
+                     return canvas.toDataURL('image/png');
+                  } catch (err) {
+                      console.error("Canvas drawing error:", err);
+                      if (err.name === 'SecurityError') {
+                          showError("Could not generate certificate due to image security restrictions (cross-origin).");
+                      } else {
+                          showError("An error occurred while generating the certificate image.");
+                      }
+                      return null;
+                  }
             }
 
-            try {
-                const response = await fetch('/.netlify/functions/sertif', { // Replace with your function name
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ name: name }),
-                });
+            // Mapping champion status number (fetched from DB) to filename prefix and display text
+            const championMap = {
+                 1: { prefix: 'FIRST', text: 'First Place' },
+                 2: { prefix: 'SECOND', text: 'Second Place' },
+                 3: { prefix: 'THIRD', text: 'Third Place' }
+                 // Status 0 is implicitly handled (not in map)
+             };
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+
+            // --- Form Submission Handler ---
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                clearMessagesAndErrors();
+                console.log("--- Form submitted ---"); // DEBUG START
+
+                const participantNameInput = nameInput.value.trim();
+                if (!participantNameInput) { showError("Please enter your full name.", nameInput, nameError); return; }
+                console.log(`[DEBUG] Searching for name: ${participantNameInput}`);
+
+                showLoading(`Searching for '${participantNameInput}'...`);
+                try {
+                     const encodedName = encodeURIComponent(participantNameInput);
+                     const functionUrl = `/.netlify/functions/find-certificate-by-name?name=${encodedName}`;
+                     console.log(`[DEBUG] Fetching from: ${functionUrl}`);
+
+                     const response = await fetch(functionUrl);
+                     console.log(`[DEBUG] Response Status: ${response.status}`);
+
+                     const responseText = await response.text();
+                     // console.log(`[DEBUG] Response Text: ${responseText}`); // Can be verbose
+
+                     let responseBody;
+                     try { responseBody = JSON.parse(responseText); }
+                     catch (jsonError) { console.error("Failed to parse JSON response:", jsonError, responseText); showError(`Received invalid data from server. Status: ${response.status}`); return; }
+
+                     if (!response.ok) { /* Error handling */ const errorText = responseBody.error || responseBody.message || `Server error (${response.status}).`; console.error(`Fetch error: ${response.status}`, responseBody); if (response.status === 404) { showError(`Participant '${participantNameInput}' not found.`); } else if (response.status === 409) { showError(errorText); } else if (response.status === 422) { showError(errorText); } else { showError(`Error: ${errorText}`); } return; }
+
+                     console.log("[DEBUG] Fetch successful. Response Body:", JSON.stringify(responseBody, null, 2)); // Pretty print JSON
+
+                     // 3. Process Successful Response
+                     const participantData = responseBody;
+
+                     // Validation - Crucial!
+                     if (!participantData || typeof participantData !== 'object') { throw new Error("Invalid data format."); }
+                     if (!participantData.id || !participantData.name || !participantData.school) { throw new Error("Incomplete data (missing ID, Name, or School)."); }
+                     if (!participantData.competitionInfo || !participantData.competitionInfo.category || !participantData.competitionInfo.statusColumn) { throw new Error("Incomplete data (missing competition details)."); }
+                     const championColumnName = 'champion'; // ** VERIFY THIS KEY MATCHES JSON FROM BACKEND **
+                     if (!(championColumnName in participantData)) {
+                         console.error("[DEBUG] 'champion' key is MISSING in the response data:", participantData);
+                         throw new Error("Incomplete data (missing champion status).");
+                     } else {
+                          console.log(`[DEBUG] Raw value for key '${championColumnName}':`, participantData[championColumnName], `(type: ${typeof participantData[championColumnName]})`);
+                     }
+
+
+                     showLoading("Checking registration status...");
+                     const competitionInfo = participantData.competitionInfo;
+                     const statusColumn = competitionInfo.statusColumn;
+                     const competitionCategory = competitionInfo.category;
+                     // ** CAREFUL PARSING OF CHAMPION STATUS **
+                     console.log("competitionInfo", competitionInfo)
+                     const championStatusRaw = participantData[championColumnName];
+                     let championStatus = championStatusRaw !== null && typeof championStatusRaw !== 'undefined'
+                                             ? parseInt(championStatusRaw, 10)
+                                             : 0; // Default to 0
+                     // Check if parseInt resulted in NaN (Not a Number)
+                     if (isNaN(championStatus)) {
+                         console.error(`[DEBUG] Could not parse champion status ('${championStatusRaw}') as a number.`);
+                         championStatus = 0; // Treat as non-champion if parsing failed
+                     }
+
+                     const isRegistered = participantData[statusColumn] === true; // ** STRICT CHECK **
+                     const actualNameFromDb = participantData.name;
+                     const actualSchoolFromDb = participantData.school;
+
+                     console.log(`[DEBUG] Category: ${competitionCategory}, Status Col: ${statusColumn}, Status Value: ${participantData[statusColumn]}, Is Registered: ${isRegistered}`);
+                     console.log(`[DEBUG] Parsed Champion Status: ${championStatus}`);
+
+                     // --- THE CRITICAL CHECK ---
+                     if (isRegistered) {
+                        console.log("[DEBUG] Passed 'isRegistered' check. Continuing..."); // Check if this log appears
+
+                        const categoryUpper = competitionCategory.toUpperCase();
+                        let participantTemplatePath = null;
+                        let championTemplatePath = null;
+                        let championDetails = null;
+
+                        // --- Determine Participant Cert Path ---
+                        // Filename: PESERTA {CATEGORY}.png
+                        const participantFileName = `PESERTA ${categoryUpper}.png`;
+                        // Full Path: Assets/{CATEGORY}/PESERTA {CATEGORY}.png
+                        participantTemplatePath = `Assets/${categoryUpper}/${participantFileName}`;
+                        console.log(`[DEBUG] Participant Template Path: ${participantTemplatePath}`);
+
+                        // --- Determine Champion Cert Path using the PARSED championStatus ---
+                        console.log(`[DEBUG] Checking champion status: ${championStatus} > 0 AND map has key ${championStatus}?`, championMap[championStatus]);
+                        if (championStatus > 0 && championMap[championStatus]) {
+                             championDetails = championMap[championStatus];
+                             // Filename: {RANK_PREFIX} {CATEGORY}.png (e.g., FIRST MATH.png)
+                             const championFileName = `${championDetails.prefix} ${categoryUpper}.png`;
+                              // Full Path: Assets/{CATEGORY}/{RANK_PREFIX} {CATEGORY}.png
+                             championTemplatePath = `Assets/${categoryUpper}/${championFileName}`;
+                             console.log(`[DEBUG] Champion Template Path determined: ${championTemplatePath}`);
+                        } else {
+                            console.log(`[DEBUG] No champion certificate needed based on status ${championStatus}.`);
+                            championTemplatePath = null; // Ensure it's null if not needed
+                            championDetails = null;
+                        }
+
+                        // --- Store Data for Download ---
+                        console.log("[DEBUG] Preparing to set certificateDataForDownload..."); // <<< ADDED THIS LOG
+                        certificateDataForDownload = {
+                            name: actualNameFromDb,
+                            school: actualSchoolFromDb,
+                            participantTemplateSrc: participantTemplatePath,
+                            championTemplateSrc: championTemplatePath, // Null if not needed
+                            championRankPrefix: championDetails ? championDetails.prefix : null,
+                            championRankText: championDetails ? championDetails.text : null
+                        };
+                        // Log the value *immediately after* setting it
+                        console.log("[DEBUG] certificateDataForDownload HAS BEEN SET TO:", JSON.stringify(certificateDataForDownload, null, 2)); // <<< ADDED THIS LOG
+
+                        // --- Preload Images and Enable Buttons ---
+                        showLoading("Loading certificate template(s)...");
+                        let participantLoaded = false;
+                        let championLoadAttempted = !!championTemplatePath; // True only if a champion path was set
+                        let championLoaded = !championLoadAttempted; // Start as 'loaded' only if not attempted
+
+                        const checkCompletion = () => {
+                            console.log(`[DEBUG] checkCompletion: participantLoaded=${participantLoaded}, championLoadAttempted=${championLoadAttempted}, championLoaded=${championLoaded}`);
+                            // Show success only when participant is loaded AND
+                            // (EITHER champion wasn't needed OR champion was needed AND has finished loading/failing)
+                            if (participantLoaded && (championLoadAttempted ? championLoaded : true)) {
+                                const finalMessage = championDetails
+                                                      ? `Participant & ${championDetails.text} certificates ready for ${actualNameFromDb}!`
+                                                      : `Participant certificate ready for ${actualNameFromDb}!`;
+
+                                // Check if a warning message is already showing (e.g., champion template failed)
+                                if (!errorMessage.classList.contains('hidden') && errorMessage.textContent.includes('Warning:')) {
+                                    // If champ failed but participant is ready
+                                    successMessage.textContent = `Participant certificate ready. (${errorMessage.textContent})`; // Keep warning visible
+                                    successMessage.classList.remove('hidden');
+                                    loadingMessage.classList.add('hidden'); // Hide loading
+                                    // Don't hide warning here errorMessage.classList.add('hidden');
+                                } else if (errorMessage.classList.contains('hidden')) {
+                                    // If no errors, show normal success
+                                    showSuccess(finalMessage);
+                                } else {
+                                    // Some other error occurred, hide loading
+                                      loadingMessage.classList.add('hidden');
+                                }
+                            }
+                        };
+                        
+                        
+                        // Participant Image Loader
+                        console.log(`[DEBUG] Setting participant image src: ${participantTemplatePath}`);
+                        participantTemplateImage.onload = () => {
+                            console.log("[DEBUG] >>> Participant template loaded successfully.");
+                            participantLoaded = true;
+                            participantDownloadArea.classList.remove('hidden'); // Show participant download button area
+                            checkCompletion(); // Check if all loading is done
+                        };
+                        participantTemplateImage.onerror = (err) => {
+                            console.error("[DEBUG] >>> FAILED to load participant template image:", participantTemplatePath, err);
+                            showError(`Critical Error: Failed to load the Participant certificate template. Expected at: [${participantTemplatePath}]. Cannot proceed.`);
+                            
+                            certificateDataForDownload = null; // Invalidate data
+                        };
+                        participantTemplateImage.src = ''; // Clear
+                        participantTemplateImage.src = participantTemplatePath; // Trigger load
+                        
+                        // Champion Image Loader (only if champion path exists)
+                        if (championTemplatePath) {
+                            console.log(`[DEBUG] Setting champion image src: ${championTemplatePath}`);
+                            championTemplateImage.onload = () => {
+                                console.log("[DEBUG] >>> Champion template loaded successfully.");
+                                championLoaded = true;
+                                // Set the dynamic text for the champion download area
+                                championRankText.textContent = certificateDataForDownload.championRankText;
+                                championButtonRankText.textContent = certificateDataForDownload.championRankText;
+                                championDownloadArea.classList.remove('hidden'); // ** THIS IS WHERE THE BUTTON IS SHOWN **
+                                console.log("[DEBUG] Champion download area shown.");
+                                checkCompletion(); // Check if all loading is done
+                            };
+                            championTemplateImage.onerror = (err) => {
+                                console.error("[DEBUG] >>> FAILED to load champion template image:", championTemplatePath, err);
+                                // Show warning, allow participant cert download if it loads
+                                errorMessage.textContent = `Warning: Could not load the ${certificateDataForDownload.championRankText} certificate template.`;
+                                errorMessage.classList.remove('hidden');
+                                championLoadAttempted = true; // Mark as attempted
+                                championLoaded = true; // Consider 'done' loading (even though failed)
+                                championDownloadArea.classList.add('hidden'); // Ensure this button area is hidden
+                                checkCompletion(); // Check participant status
+                            };
+                            championTemplateImage.src = ''; // Clear
+                            championTemplateImage.src = championTemplatePath; // Trigger load
+                        } else {
+                            // No champion template path was set, immediately check completion based on participant load status
+                            // (checkCompletion will be called by participant onload/onerror)
+                            console.log("[DEBUG] No champion template path set, skipping champion load.");
+                        }
+
+                     } else {
+                         // This is the case where the participant was found BUT their status wasn't true
+                         console.log(`[DEBUG] 'isRegistered' is false. Status value: ${participantData[statusColumn]}`);
+                         showError(`Registration found for '${actualNameFromDb}' in ${competitionCategory}, but certificate status (${statusColumn}) is not yet complete.`);
+                     }
+
+                } catch (error) {
+                    console.error("Error during verification process:", error);
+                    // Ensure certificateDataForDownload is null if an error occurs here
+                    certificateDataForDownload = null;
+                    showError(error.message || "An unexpected error occurred during verification.");
+                } finally {
+                   // Loading message hidden by checkCompletion -> showSuccess or showError eventually
                 }
+            });
 
-                const data = await response.json();
+            // --- Download Button Handlers ---
 
-                if (data && data.link) {
-                    certificateDisplay.innerHTML = `<iframe
-                        class="w-full aspect-video rounded border border-gray-300"
-                        src="${data.link}/preview"
-                        allow="autoplay"
-                        allowfullscreen>
-                    </iframe>`;
-                    errorMessage.classList.add('hidden');
+            // Participant Download
+            participantDownloadButton.addEventListener('click', () => {
+                console.log("Participant download clicked. Checking data:", certificateDataForDownload); // DEBUG
+                if (!certificateDataForDownload || !certificateDataForDownload.participantTemplateSrc) { showError("Participant certificate data not ready."); return; }
+                if (!participantTemplateImage.complete || participantTemplateImage.naturalWidth === 0) { console.error("Participant template image not loaded for download."); showError("Participant template image not loaded."); return; }
+                const dataURL=drawNameAndSchoolOnCanvas(participantTemplateImage,certificateDataForDownload.name,certificateDataForDownload.school); if(dataURL){const safeName=certificateDataForDownload.name.replace(/[^a-z0-9]/gi,'_').toLowerCase();const downloadLink=document.createElement('a');downloadLink.href=dataURL;downloadLink.download=`ActionFest_Certificate_${safeName}_Participant.png`;document.body.appendChild(downloadLink);downloadLink.click();document.body.removeChild(downloadLink);}});
 
-                    const fileId = extractFileId(data.link);
-                    console.log(fileId)
-                    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+             // Champion Download
+            championDownloadButton.addEventListener('click', () => {
+                 console.log("Champion download clicked. Checking data:", certificateDataForDownload); // DEBUG
+                 // Ensure champion data and prefix exist before proceeding
+                 if (!certificateDataForDownload || !certificateDataForDownload.championTemplateSrc || !certificateDataForDownload.championRankPrefix) { showError("Champion certificate data not ready."); return; }
+                 if (!championTemplateImage.complete || championTemplateImage.naturalWidth === 0) { console.error("Champion template image not loaded for download."); showError("Champion template image not loaded."); return; }
+                 const dataURL=drawNameAndSchoolOnCanvas(championTemplateImage,certificateDataForDownload.name,certificateDataForDownload.school); if(dataURL){const safeName=certificateDataForDownload.name.replace(/[^a-z0-9]/gi,'_').toLowerCase();const downloadLink=document.createElement('a');downloadLink.href=dataURL;downloadLink.download=`ActionFest_Certificate_${safeName}_${certificateDataForDownload.championRankPrefix}.png`;document.body.appendChild(downloadLink);downloadLink.click();document.body.removeChild(downloadLink);}});
 
-                    let myLink = document.getElementById('link_download'); // Assuming you have an anchor with id="myLink"
-
-                    if (myLink) { // Check if the element exists
-                        myLink.setAttribute('href', downloadUrl);
-                    }
-                } else {
-                    certificateDisplay.innerHTML = '<p class="text-center text-red-500">Certificate not found.</p>';
-                    errorMessage.classList.add('hidden');
-                }
-
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                certificateDisplay.innerHTML = '<p class="text-center text-red-500">An error occurred.</p>';
-                errorMessage.classList.add('hidden');
-            }
         });
     </script>
+
 </body>
 </html>
