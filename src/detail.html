@@ -161,14 +161,14 @@
             // --- Certificate Button Logic ---
             const certificateButton = document.getElementById('certificate-button');
             if (certificateButton) {
-                const eventStartDate = new Date(2025, 3, 19, 0, 0, 0); // April 12th, 2025
+                const eventStartDate = new Date(2025, 3, 12, 0, 0, 0); // April 12th, 2025
                 const currentDate = new Date();
                 currentDate.setHours(0, 0, 0, 0);
 
                 if (currentDate >= eventStartDate) {
                     certificateButton.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed', 'pointer-events-none');
                     certificateButton.classList.add('btn-primary');
-                    certificateButton.href = 'CertificateCheck.html'; // UPDATE THIS LINK
+                    certificateButton.href = 'certification.html'; // UPDATE THIS LINK
                 }
             } else {
                 console.warn("Certificate button element not found.");
